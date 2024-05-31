@@ -1,0 +1,22 @@
+flutter_native_splash:
+
+  # config
+  android: true
+  ios: true
+  # macos: true
+  # windows: true
+  # linux: true
+
+  # android
+  image: "assets/images/ic_splash.png"
+  background_image: "assets/images/ic_splash_background.png"
+  branding: "assets/images/ic_branding.png"
+  android_12:
+    color: "#5C5BF6"
+    # image: "assets/images/ic_splash_android.png"
+    # branding: "assets/images/ic_branding.png"
+
+  # ios
+  image_ios: assets/images/ic_splash.png
+  background_image_ios: assets/images/ic_splash_background.png
+  branding_ios: assets/images/ic_branding.png
