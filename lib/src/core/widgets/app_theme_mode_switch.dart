@@ -17,8 +17,8 @@ class AppThemeModeSwitch extends StatelessWidget {
                 value ? ThemeMode.dark : ThemeMode.light,
               ),
             ),
-        thumbIcon: MaterialStateProperty.resolveWith((states) {
-          if (states.any((materialState) => materialState == MaterialState.selected)) {
+        thumbIcon: WidgetStateProperty.resolveWith((states) {
+          if (states.any((materialState) => materialState == WidgetState.selected)) {
             return const Icon(Icons.dark_mode_sharp);
           } else {
             return const Icon(Icons.light_mode_sharp);
