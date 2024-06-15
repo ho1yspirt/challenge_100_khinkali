@@ -46,4 +46,4 @@ app.*.map.json
 .fvm/
 
 # Security related
-*.env
+.env
