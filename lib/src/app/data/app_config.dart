@@ -1,6 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-abstract interface class IAppConfig {
+abstract interface class AppConfig {
   String get host;
 
   //* AWS start
@@ -23,7 +23,7 @@ abstract interface class IAppConfig {
   String get appWebsiteBaseUrl;
 }
 
-class ProdAppConfig implements IAppConfig {
+class Prod$AppConfig$Impl implements AppConfig {
   @override
   String get host => 'prod';
 
@@ -49,7 +49,7 @@ class ProdAppConfig implements IAppConfig {
   String get appWebsiteBaseUrl => dotenv.env['WEBSITE_DOMAIN'] ?? '';
 }
 
-class DevAppConfig implements IAppConfig {
+class Dev$AppConfig$Impl implements AppConfig {
   @override
   String get host => 'dev';
 
@@ -75,7 +75,7 @@ class DevAppConfig implements IAppConfig {
   String get appWebsiteBaseUrl => dotenv.env['BETA_WEBSITE_DOMAIN'] ?? '';
 }
 
-class TestAppConfig implements IAppConfig {
+class Test$AppConfig$Impl implements AppConfig {
   @override
   String get host => 'test';
 

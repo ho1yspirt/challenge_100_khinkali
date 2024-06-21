@@ -2,8 +2,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class SettingsModel extends Equatable {
-  const SettingsModel({
+class AppSettingsModel extends Equatable {
+  const AppSettingsModel({
     required this.currentLocale,
     required this.currentThemeMode,
   });
@@ -11,11 +11,11 @@ class SettingsModel extends Equatable {
   final String currentLocale;
   final ThemeMode currentThemeMode;
 
-  SettingsModel copyWith({
+  AppSettingsModel copyWith({
     String? currentLocale,
     ThemeMode? currentThemeMode,
   }) =>
-      SettingsModel(
+      AppSettingsModel(
         currentLocale: currentLocale ?? this.currentLocale,
         currentThemeMode: currentThemeMode ?? this.currentThemeMode,
       );

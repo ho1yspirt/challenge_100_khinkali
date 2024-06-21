@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:learn_flutter_aws/src/app/widget/app_dependencies_scope.dart';
-import 'package:learn_flutter_aws/src/app/data/app_dependencies.dart';
-import 'package:learn_flutter_aws/src/features/settings/widget/settings_scope.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'app_context.dart';
+import 'app_dependencies_scope.dart';
+import '../data/app_dependencies.dart';
+import '../../features/app/bloc/app_bloc/app_bloc.dart';
+import '../../features/app/widget/app_settings_scope.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -13,9 +16,17 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppDependenciesScopeWidget(
+    return AppDependenciesScope(
       appDependencies: appDependencies,
-      child: const SettingsScopeWidget(),
+      child: BlocBuilder<AppSettingsBloc, AppState>(
+        bloc: appDependencies.appBloc,
+        builder: (context, state) => AppSettingsScope(
+          appSettingsModel: state.appSettingsModel,
+          child: AppContext(
+            settingsModel: state.appSettingsModel,
+          ),
+        ),
+      ),
     );
   }
 }

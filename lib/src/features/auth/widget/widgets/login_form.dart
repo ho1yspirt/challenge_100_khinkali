@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learn_flutter_aws/src/app/data/app_dependencies.dart';
-import 'package:learn_flutter_aws/src/core/components/router/app_router.dart';
-import 'package:learn_flutter_aws/src/core/localization/generated/l10n.dart';
-import 'package:learn_flutter_aws/src/features/auth/bloc/auth_bloc/auth_bloc.dart';
+import '../../../../app/data/app_dependencies.dart';
+import '../../../../core/components/router/app_router.dart';
+import '../../../../core/localization/generated/l10n.dart';
+import '../../bloc/auth_bloc/auth_bloc.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -35,7 +35,7 @@ class _LoginFormState extends State<LoginForm> {
     return BlocListener<AuthBloc, AuthState>(
       bloc: _authBloc,
       listener: (context, state) {
-        if (state is AuthAuthenticated) context.goNamed(Routes.main);
+        if (state is AuthAuthenticated) context.goNamed(AppRoutes.main);
 
         if (state is AuthUnautheticated) {
           if (state.hasError) {

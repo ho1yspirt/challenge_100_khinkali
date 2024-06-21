@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learn_flutter_aws/src/core/localization/generated/l10n.dart';
-import 'package:learn_flutter_aws/src/features/auth/widget/widgets/login_form.dart';
+import '../../../../core/localization/generated/l10n.dart';
+import '../widgets/login_form.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-abstract interface class ISettingsDataSource {
+abstract interface class AppSettingsDataSource {
   String getCurrentLocale();
   Future<void> setCurrentLocale(String locale);
   ThemeMode getCurrentThemeMode();
   Future<void> setCurrentThemeMode(ThemeMode mode);
 }
 
-class SettingsDataSource implements ISettingsDataSource {
-  const SettingsDataSource(this.sharedPreferences);
+class AppSettingsDataSource$Impl implements AppSettingsDataSource {
+  const AppSettingsDataSource$Impl(this.sharedPreferences);
 
   final SharedPreferences sharedPreferences;
 

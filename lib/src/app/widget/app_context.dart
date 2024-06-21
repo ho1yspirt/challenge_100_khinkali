@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:learn_flutter_aws/src/app/data/app_dependencies.dart';
-import 'package:learn_flutter_aws/src/core/localization/generated/l10n.dart';
-import 'package:learn_flutter_aws/src/features/settings/data/models/settings_model.dart';
+
+import '../data/app_dependencies.dart';
+import '../../core/localization/generated/l10n.dart';
+import '../../features/app/data/models/app_settings_model.dart';
 
 class AppContext extends StatelessWidget {
   const AppContext({
@@ -10,7 +11,7 @@ class AppContext extends StatelessWidget {
     required this.settingsModel,
   });
 
-  final SettingsModel settingsModel;
+  final AppSettingsModel settingsModel;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,9 @@ class AppContext extends StatelessWidget {
       // config
       title: 'Flutter + AWS (${AppDependencies.of(context).appConfig.host})',
       debugShowCheckedModeBanner: false,
+      // router and navigation
       routerConfig: AppDependencies.of(context).appRouter.router,
+      // theme
       theme: AppDependencies.of(context).appTheme.lightThemeData,
       darkTheme: AppDependencies.of(context).appTheme.darkThemeData,
       themeMode: settingsModel.currentThemeMode,

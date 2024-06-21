@@ -2,14 +2,14 @@ import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:learn_flutter_aws/src/core/utils/logger.dart';
-import 'package:learn_flutter_aws/src/features/auth/data/repositories/auth_repository.dart';
+import '../../../../core/utils/logger.dart';
+import '../../data/repositories/auth_repository.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final IAuthRepository authRepository;
+  final AuthRepository authRepository;
 
   AuthBloc(this.authRepository) : super(const AuthUnautheticated()) {
     on<AuthStatusChecked>((event, emit) async {

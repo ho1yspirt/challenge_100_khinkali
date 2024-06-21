@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:learn_flutter_aws/src/app/data/app_dependencies.dart';
+import '../data/app_dependencies.dart';
 
-class AppDependenciesScopeWidget extends InheritedWidget {
-  const AppDependenciesScopeWidget({
+class AppDependenciesScope extends InheritedWidget {
+  const AppDependenciesScope({
     super.key,
     required super.child,
     required this.appDependencies,
@@ -11,8 +11,7 @@ class AppDependenciesScopeWidget extends InheritedWidget {
   final AppDependencies appDependencies;
 
   static AppDependencies? maybeOf(BuildContext context) {
-    return (context.getElementForInheritedWidgetOfExactType<AppDependenciesScopeWidget>()?.widget
-            as AppDependenciesScopeWidget?)
+    return (context.getElementForInheritedWidgetOfExactType<AppDependenciesScope>()?.widget as AppDependenciesScope?)
         ?.appDependencies;
   }
 
@@ -21,5 +20,5 @@ class AppDependenciesScopeWidget extends InheritedWidget {
   static AppDependencies of(BuildContext context) => maybeOf(context) ?? _notFoundInheritedWidgetOfExactType();
 
   @override
-  bool updateShouldNotify(AppDependenciesScopeWidget oldWidget) => false;
+  bool updateShouldNotify(AppDependenciesScope oldWidget) => false;
 }

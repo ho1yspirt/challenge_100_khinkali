@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:learn_flutter_aws/src/app/data/app_config.dart';
-import 'package:learn_flutter_aws/src/app/widget/app_dependencies_scope.dart';
-import 'package:learn_flutter_aws/src/core/components/router/app_router.dart';
-import 'package:learn_flutter_aws/src/core/components/theme/app_theme.dart';
-import 'package:learn_flutter_aws/src/core/services/cognito/cognito.dart';
-import 'package:learn_flutter_aws/src/features/auth/bloc/auth_bloc/auth_bloc.dart';
-import 'package:learn_flutter_aws/src/features/auth/data/datasources/auth_datasource.dart';
-import 'package:learn_flutter_aws/src/features/auth/data/repositories/auth_repository.dart';
-import 'package:learn_flutter_aws/src/features/settings/bloc/settings_bloc/settings_bloc.dart';
-import 'package:learn_flutter_aws/src/features/settings/data/datasources/settings_datasource.dart';
-import 'package:learn_flutter_aws/src/features/settings/data/repositories/settings_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../features/auth/services/cognito/cognito_service.dart';
+import '../widget/app_dependencies_scope.dart';
+import '../../core/components/router/app_router.dart';
+import '../../core/components/theme/app_theme.dart';
+import '../../core/services/cognito/cognito_service.dart';
+import '../../features/auth/bloc/auth_bloc/auth_bloc.dart';
+import '../../features/auth/data/datasources/auth_datasource.dart';
+import '../../features/auth/data/repositories/auth_repository.dart';
+import '../../features/app/bloc/app_bloc/app_bloc.dart';
+import '../../features/app/data/datasources/app_settings_datasource.dart';
+import '../../features/app/data/repositories/app_settings_repository.dart';
+import 'app_config.dart';
 
 class AppDependencies {
   AppDependencies();
 
-  factory AppDependencies.of(BuildContext context) => AppDependenciesScopeWidget.of(context);
+  factory AppDependencies.of(BuildContext context) => AppDependenciesScope.of(context);
 
   // config
-  late final IAppConfig appConfig;
+  late final AppConfig appConfig;
 
   // components
   late final AppRouter appRouter;
   late final AppTheme appTheme;
+
   late final SharedPreferences sharedPreferences;
   late final FlutterSecureStorage flutterSecureStorage;
 
@@ -31,48 +34,49 @@ class AppDependencies {
   late final CognitoService cognitoService;
 
   // datasources
-  late final ISettingsDataSource settingsDataSource;
-  late final IAuthDataSource authDataSource;
+  late final AppSettingsDataSource appSettingsDataSource;
+  late final AuthDataSource authDataSource;
 
   // repositories
-  late final ISettingsRepository settingsRepository;
-  late final IAuthRepository authRepository;
+  late final AppSettingsRepository settingsRepository;
+  late final AuthRepository authRepository;
 
   // blocs
-  late final SettingsBloc settingsBloc;
+  late final AppSettingsBloc appBloc;
   late final AuthBloc authBloc;
 
   Future<void> initialize(String env) async {
     // config
     appConfig = switch (env) {
-      'prod' => ProdAppConfig(),
-      'dev' => DevAppConfig(),
-      'test' => TestAppConfig(),
-      _ => DevAppConfig(),
+      'prod' => Prod$AppConfig$Impl(),
+      'dev' => Dev$AppConfig$Impl(),
+      'test' => Test$AppConfig$Impl(),
+      _ => Dev$AppConfig$Impl(),
     };
 
     // components
     appTheme = AppTheme();
+
     sharedPreferences = await SharedPreferences.getInstance();
     flutterSecureStorage = const FlutterSecureStorage();
 
     // services
-    cognitoService = CognitoService()
+    cognitoService = CognitoService$Impl()
       ..initialize(
         userPoolId: appConfig.cognitoUserPoolId,
         clientId: appConfig.cognitoClientId,
       );
 
     // datasources
-    settingsDataSource = SettingsDataSource(sharedPreferences);
-    authDataSource = AuthDataSource(flutterSecureStorage);
+    appSettingsDataSource = AppSettingsDataSource$Impl(sharedPreferences);
+    authDataSource = AuthDataSource$Impl(flutterSecureStorage);
 
     // repositories
-    settingsRepository = SettingsRepository(settingsDataSource);
-    authRepository = AuthRepository(cognitoService, authDataSource);
+    settingsRepository = AppSettingsRepository$Impl(appSettingsDataSource);
+    authRepository = AuthRepository$Impl(cognitoService, authDataSource);
 
     // blocs
-    settingsBloc = SettingsBloc(settingsRepository);
+    appBloc = AppSettingsBloc(settingsRepository);
     // create instance of auth blco once
     // and after creation immediately check current authentication status
     authBloc = AuthBloc(authRepository)..add(const AuthStatusChecked());

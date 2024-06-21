@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-abstract interface class IAuthDataSource {
+abstract interface class AuthDataSource {
   Future<void> setIdToken(String value);
   Future<void> setAccessToken(String value);
   Future<void> setRefreshToken(String value);
@@ -12,8 +12,8 @@ abstract interface class IAuthDataSource {
   Future<String> getUsername();
 }
 
-class AuthDataSource implements IAuthDataSource {
-  const AuthDataSource(
+class AuthDataSource$Impl implements AuthDataSource {
+  const AuthDataSource$Impl(
     this.flutterSecureStorage,
   );
 

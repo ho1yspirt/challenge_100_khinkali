@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learn_flutter_aws/src/core/components/router/app_router.dart';
-import 'package:learn_flutter_aws/src/core/localization/generated/l10n.dart';
+import '../../../../core/components/router/app_router.dart';
+import '../../../../core/localization/generated/l10n.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
@@ -26,7 +26,7 @@ class AuthScreen extends StatelessWidget {
           FilledButton.icon(
             onPressed: () {
               HapticFeedback.heavyImpact();
-              context.pushNamed(Routes.login);
+              context.pushNamed(AppRoutes.login);
             },
             icon: const Icon(Icons.login_sharp),
             label: Text(S.of(context).actionLogin),

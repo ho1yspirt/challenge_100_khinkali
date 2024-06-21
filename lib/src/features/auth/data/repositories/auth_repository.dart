@@ -1,8 +1,9 @@
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
-import 'package:learn_flutter_aws/src/core/services/cognito/cognito.dart';
-import 'package:learn_flutter_aws/src/features/auth/data/datasources/auth_datasource.dart';
 
-abstract interface class IAuthRepository {
+import '../../../../core/services/cognito/cognito_service.dart';
+import '../datasources/auth_datasource.dart';
+
+abstract interface class AuthRepository {
   Future<(CognitoIdToken, CognitoAccessToken, CognitoRefreshToken?)> login({
     required String email,
     required String password,
@@ -18,14 +19,14 @@ abstract interface class IAuthRepository {
   Future<CognitoUserSession?> getSession();
 }
 
-class AuthRepository implements IAuthRepository {
-  const AuthRepository(
+class AuthRepository$Impl implements AuthRepository {
+  const AuthRepository$Impl(
     this.cognitoService,
     this.authDataSource,
   );
 
   final CognitoService cognitoService;
-  final IAuthDataSource authDataSource;
+  final AuthDataSource authDataSource;
 
   @override
   Future<(CognitoIdToken, CognitoAccessToken, CognitoRefreshToken?)> login({
@@ -40,15 +41,15 @@ class AuthRepository implements IAuthRepository {
       );
 
       cognitoService.initializeSession(
-        session: (await cognitoService.user.authenticateUser(
+        userSession: (await cognitoService.user.authenticateUser(
           authenticationDetails,
         ))!,
       );
 
       return (
-        cognitoService.cognitoSession.idToken,
-        cognitoService.cognitoSession.accessToken,
-        cognitoService.cognitoSession.refreshToken,
+        cognitoService.userSession.idToken,
+        cognitoService.userSession.accessToken,
+        cognitoService.userSession.refreshToken,
       );
     } catch (e) {
       rethrow;
@@ -77,7 +78,7 @@ class AuthRepository implements IAuthRepository {
     try {
       try {
         // get session from cognito service
-        return cognitoService.cognitoSession;
+        return cognitoService.userSession;
       } catch (e) {
         _refreshSession();
       }
@@ -98,10 +99,10 @@ class AuthRepository implements IAuthRepository {
       // initialize cognito user and cognito session with previous application session data
       cognitoService.initializeUser(username: username);
       cognitoService.initializeSession(
-        session: (await cognitoService.user.refreshSession(refreshToken))!,
+        userSession: (await cognitoService.user.refreshSession(refreshToken))!,
       );
 
-      return cognitoService.cognitoSession;
+      return cognitoService.userSession;
     } catch (e) {
       cognitoService.initializeUser(username: 'anonymous');
 

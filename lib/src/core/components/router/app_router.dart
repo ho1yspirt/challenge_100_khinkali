@@ -1,50 +1,50 @@
 import 'package:go_router/go_router.dart';
-import 'package:learn_flutter_aws/src/core/components/router/app_router_stream.dart';
-import 'package:learn_flutter_aws/src/features/auth/bloc/auth_bloc/auth_bloc.dart';
-import 'package:learn_flutter_aws/src/features/auth/widget/screens/auth_screen.dart';
-import 'package:learn_flutter_aws/src/features/auth/widget/screens/login_screen.dart';
-import 'package:learn_flutter_aws/src/features/main/widget/screens/home_screen.dart';
-import 'package:learn_flutter_aws/src/features/main/widget/screens/main_screen.dart';
+import 'app_router_stream.dart';
+import '../../../features/auth/bloc/auth_bloc/auth_bloc.dart';
+import '../../../features/auth/widget/screens/auth_screen.dart';
+import '../../../features/auth/widget/screens/login_screen.dart';
+import '../../../features/main/widget/screens/home_screen.dart';
+import '../../../features/main/widget/screens/main_screen.dart';
 
 final class AppRouter {
   AppRouter(this.authBloc) {
     router = GoRouter(
       debugLogDiagnostics: true,
-      initialLocation: Routes.main,
+      initialLocation: AppRoutes.main,
       refreshListenable: AppRouterRefreshListenableStream(authBloc.stream),
       redirect: (context, state) {
         final currentLocation = state.matchedLocation;
         final bool authStatus = authBloc.state is AuthAuthenticated;
 
         if (!authStatus) {
-          if (currentLocation.contains(Routes.login)) return null;
+          if (currentLocation.contains(AppRoutes.login)) return null;
 
-          return Routes.auth;
+          return AppRoutes.auth;
         }
 
         return null;
       },
       routes: [
         GoRoute(
-          name: Routes.main,
-          path: Routes.main,
+          name: AppRoutes.main,
+          path: AppRoutes.main,
           builder: (context, state) => const MainScreen(),
           routes: [
             GoRoute(
-              name: Routes.home,
-              path: Routes.home,
+              name: AppRoutes.home,
+              path: AppRoutes.home,
               builder: (context, state) => const HomeScreen(),
             ),
           ],
         ),
         GoRoute(
-          name: Routes.auth,
-          path: Routes.auth,
+          name: AppRoutes.auth,
+          path: AppRoutes.auth,
           builder: (context, state) => const AuthScreen(),
           routes: [
             GoRoute(
-              name: Routes.login,
-              path: Routes.login,
+              name: AppRoutes.login,
+              path: AppRoutes.login,
               builder: (context, state) => const LoginScreen(),
             ),
           ],
@@ -58,8 +58,8 @@ final class AppRouter {
   late final GoRouter router;
 }
 
-final class Routes {
-  const Routes._();
+final class AppRoutes {
+  const AppRoutes._();
 
   static const main = '/';
   static const home = 'home';

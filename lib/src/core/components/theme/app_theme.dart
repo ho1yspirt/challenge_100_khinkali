@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_flutter_aws/src/core/constants/constants.dart';
+import '../../constants/constants.dart';
 
 final class AppTheme {
   final ThemeData _baseThemeData = ThemeData(
@@ -14,16 +14,18 @@ final class AppTheme {
   );
 
   late final ThemeData lightThemeData = _baseThemeData.copyWith(
-    colorScheme: ColorScheme.fromSeed(
+    colorScheme: const ColorScheme.highContrastLight(
+      surfaceTint: Colors.transparent,
       brightness: Brightness.light,
-      seedColor: AppColors.primary,
+      primary: AppColors.primary,
     ),
   );
 
   late final ThemeData darkThemeData = _baseThemeData.copyWith(
-    colorScheme: ColorScheme.fromSeed(
+    colorScheme: const ColorScheme.highContrastDark(
+      surfaceTint: Colors.transparent,
       brightness: Brightness.dark,
-      seedColor: AppColors.primary,
+      primary: AppColors.primary,
     ),
   );
 }
