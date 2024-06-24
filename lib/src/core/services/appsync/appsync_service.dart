@@ -1,5 +1,6 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:learn_flutter_aws/src/core/services/cognito/cognito_service.dart';
+
+import '../cognito/cognito_service.dart';
 
 abstract interface class AppSyncService {
   void initialize({
