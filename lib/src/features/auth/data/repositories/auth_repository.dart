@@ -4,109 +4,66 @@ import '../../../../core/services/cognito/cognito_service.dart';
 import '../datasources/auth_datasource.dart';
 
 abstract interface class AuthRepository {
-  Future<(CognitoIdToken, CognitoAccessToken, CognitoRefreshToken?)> login({
+  Future<void> login({
     required String email,
     required String password,
   });
 
-  Future<void> saveSessionData({
-    required CognitoIdToken idToken,
-    required CognitoAccessToken accessToken,
-    CognitoRefreshToken? refreshToken,
-    required String username,
-  });
-
-  Future<CognitoUserSession?> getSession();
+  Future<CognitoUserSession?> restore();
 }
 
 class AuthRepository$Impl implements AuthRepository {
   const AuthRepository$Impl(
-    this.cognitoService,
-    this.authDataSource,
+    this._cognitoService,
+    this._authDataSource,
   );
 
-  final CognitoService cognitoService;
-  final AuthDataSource authDataSource;
+  final CognitoService _cognitoService;
+  final AuthDataSource _authDataSource;
 
   @override
-  Future<(CognitoIdToken, CognitoAccessToken, CognitoRefreshToken?)> login({
+  Future<void> login({
     required String email,
     required String password,
   }) async {
     try {
-      cognitoService.initializeUser(username: email);
       final AuthenticationDetails authenticationDetails = AuthenticationDetails(
         username: email,
         password: password,
       );
 
-      cognitoService.initializeSession(
-        userSession: (await cognitoService.user.authenticateUser(
-          authenticationDetails,
-        ))!,
+      await _cognitoService.authenticateUserSession(
+        username: email,
+        authenticationDetails: authenticationDetails,
       );
 
-      return (
-        cognitoService.userSession.idToken,
-        cognitoService.userSession.accessToken,
-        cognitoService.userSession.refreshToken,
-      );
+      await _authDataSource.setUsername(email);
+      await _authDataSource.setIdToken(_cognitoService.userSession!.idToken.getJwtToken()!);
+      await _authDataSource.setAccessToken(_cognitoService.userSession!.accessToken.getJwtToken()!);
+      await _authDataSource.setRefreshToken(_cognitoService.userSession!.refreshToken!.getToken()!);
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<void> saveSessionData({
-    required CognitoIdToken idToken,
-    required CognitoAccessToken accessToken,
-    CognitoRefreshToken? refreshToken,
-    required String username,
-  }) async {
+  Future<CognitoUserSession?> restore() async {
     try {
-      await authDataSource.setIdToken(idToken.jwtToken!);
-      await authDataSource.setAccessToken(accessToken.jwtToken!);
-      await authDataSource.setRefreshToken(refreshToken!.token!);
-      await authDataSource.setUsername(username);
-    } catch (e) {
-      rethrow;
-    }
-  }
+      final String username = await _authDataSource.getUsername();
+      final String idToken = await _authDataSource.getIdToken();
+      final String accessToken = await _authDataSource.getAccessToken();
+      final String refreshToken = await _authDataSource.getRefreshToken();
 
-  @override
-  Future<CognitoUserSession?> getSession() async {
-    try {
-      try {
-        // get session from cognito service
-        return cognitoService.userSession;
-      } catch (e) {
-        _refreshSession();
-      }
-    } catch (e) {
-      rethrow;
-    }
-    return null;
-  }
-
-  Future<CognitoUserSession?> _refreshSession() async {
-    try {
-      // get username and refresh token from previous application session for cognito session
-      final String username = await authDataSource.getUsername();
-      final CognitoRefreshToken refreshToken = CognitoRefreshToken(
-        await authDataSource.getRefreshToken(),
+      _cognitoService.initializeUserSession(
+        username: username,
+        idToken: idToken,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       );
 
-      // initialize cognito user and cognito session with previous application session data
-      cognitoService.initializeUser(username: username);
-      cognitoService.initializeSession(
-        userSession: (await cognitoService.user.refreshSession(refreshToken))!,
-      );
-
-      return cognitoService.userSession;
+      return _cognitoService.userSession;
     } catch (e) {
-      cognitoService.initializeUser(username: 'anonymous');
-
-      return null;
+      rethrow;
     }
   }
 }

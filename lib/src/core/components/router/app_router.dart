@@ -14,7 +14,7 @@ final class AppRouter {
       refreshListenable: AppRouterRefreshListenableStream(authBloc.stream),
       redirect: (context, state) {
         final currentLocation = state.matchedLocation;
-        final bool authStatus = authBloc.state is AuthAuthenticated;
+        final bool authStatus = authBloc.state is Authenticated;
 
         if (!authStatus) {
           if (currentLocation.contains(AppRoutes.login)) return null;

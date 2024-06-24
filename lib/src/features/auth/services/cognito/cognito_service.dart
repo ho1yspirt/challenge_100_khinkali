@@ -6,17 +6,17 @@ class CognitoService$Impl implements CognitoService {
   CognitoService$Impl();
 
   late final CognitoUserPool _userPool;
-  late CognitoUser _user;
-  late CognitoUserSession _userSession;
+  CognitoUser? _user;
+  CognitoUserSession? _userSession;
 
   @override
   CognitoUserPool get userPool => _userPool;
 
   @override
-  CognitoUser get user => _user;
+  CognitoUser? get user => _user;
 
   @override
-  CognitoUserSession get userSession => _userSession;
+  CognitoUserSession? get userSession => _userSession;
 
   @override
   void initialize({
@@ -27,14 +27,47 @@ class CognitoService$Impl implements CognitoService {
   }
 
   @override
-  void initializeUser({
+  Future<void> initializeUserSession({
     required String username,
-  }) =>
+    required String idToken,
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    try {
       _user = CognitoUser(username, userPool);
+      _userSession = CognitoUserSession(
+        CognitoIdToken(idToken),
+        CognitoAccessToken(accessToken),
+        refreshToken: CognitoRefreshToken(refreshToken),
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   @override
-  void initializeSession({
-    required CognitoUserSession userSession,
-  }) =>
-      _userSession = userSession;
+  Future<void> authenticateUserSession({
+    required String username,
+    required AuthenticationDetails authenticationDetails,
+  }) async {
+    try {
+      _user = CognitoUser(username, userPool);
+      _userSession = await user?.authenticateUser(authenticationDetails);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> refreshSession() async {
+    try {
+      final CognitoUserSession? currentSession = await user?.getSession();
+
+      if (currentSession != null && currentSession.isValid()) {
+        _userSession = await _user?.refreshSession(currentSession.refreshToken!);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

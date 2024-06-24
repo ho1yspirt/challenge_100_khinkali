@@ -11,12 +11,12 @@ final class AuthProcessing extends AuthState {
   const AuthProcessing();
 }
 
-final class AuthAuthenticated extends AuthState {
-  const AuthAuthenticated();
+final class Authenticated extends AuthState {
+  const Authenticated();
 }
 
-final class AuthUnautheticated extends AuthState {
-  const AuthUnautheticated({
+final class Unautheticated extends AuthState {
+  const Unautheticated({
     this.hasError = false,
     this.error,
   });

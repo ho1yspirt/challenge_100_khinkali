@@ -9,26 +9,27 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthRepository authRepository;
+  final AuthRepository _authRepository;
 
-  AuthBloc(this.authRepository) : super(const AuthUnautheticated()) {
+  AuthBloc(this._authRepository) : super(const Unautheticated()) {
     on<AuthStatusChecked>((event, emit) async {
       try {
-        final CognitoUserSession? session = await authRepository.getSession();
+        final CognitoUserSession? session = await _authRepository.restore();
 
         if (session == null) {
-          emit(const AuthUnautheticated());
+          emit(const Unautheticated());
         } else {
           if (session.isValid()) {
-            emit(const AuthAuthenticated());
+            emit(const Authenticated());
           } else {
-            emit(const AuthUnautheticated());
+            // TODO: refresh session with tokens
+            emit(const Unautheticated());
           }
         }
       } catch (error, stackTrace) {
         logger.e('AuthBloc', error: error, stackTrace: stackTrace);
 
-        emit(AuthUnautheticated(
+        emit(Unautheticated(
           hasError: true,
           error: error,
         ));
@@ -39,27 +40,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         emit(const AuthProcessing());
 
-        final (
-          CognitoIdToken,
-          CognitoAccessToken,
-          CognitoRefreshToken?,
-        ) sessionData = await authRepository.login(
+        await _authRepository.login(
           email: event.email,
           password: event.password,
         );
 
-        await authRepository.saveSessionData(
-          idToken: sessionData.$1,
-          accessToken: sessionData.$2,
-          refreshToken: sessionData.$3,
-          username: event.email,
-        );
-
-        emit(const AuthAuthenticated());
+        emit(const Authenticated());
       } catch (error, stackTrace) {
         logger.e('AuthBloc', error: error, stackTrace: stackTrace);
 
-        emit(AuthUnautheticated(
+        emit(Unautheticated(
           hasError: true,
           error: error,
         ));

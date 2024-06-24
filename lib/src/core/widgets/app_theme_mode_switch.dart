@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../app/data/app_dependencies.dart';
@@ -19,9 +20,12 @@ class AppThemeModeSwitch extends StatelessWidget {
             ),
         thumbIcon: WidgetStateProperty.resolveWith((states) {
           if (states.any((materialState) => materialState == WidgetState.selected)) {
-            return const Icon(Icons.dark_mode_sharp);
+            return Icon(
+              CupertinoIcons.moon,
+              color: Theme.of(context).colorScheme.onSurface,
+            );
           } else {
-            return const Icon(Icons.light_mode_sharp);
+            return const Icon(CupertinoIcons.sun_max);
           }
         }),
       ),
