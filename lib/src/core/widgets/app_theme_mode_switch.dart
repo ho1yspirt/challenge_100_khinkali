@@ -10,10 +10,10 @@ class AppThemeModeSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppSettingsBloc, AppState>(
-      bloc: AppDependencies.of(context).appBloc,
+      bloc: AppDependencies.of(context).appSettingsBloc,
       builder: (context, state) => Switch(
         value: state.appSettingsModel.currentThemeMode == ThemeMode.dark,
-        onChanged: (value) => AppDependencies.of(context).appBloc.add(
+        onChanged: (value) => AppDependencies.of(context).appSettingsBloc.add(
               AppThemeModeChanged(
                 value ? ThemeMode.dark : ThemeMode.light,
               ),

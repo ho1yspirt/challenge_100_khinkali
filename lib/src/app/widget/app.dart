@@ -19,7 +19,7 @@ class App extends StatelessWidget {
     return AppDependenciesScope(
       appDependencies: appDependencies,
       child: BlocBuilder<AppSettingsBloc, AppState>(
-        bloc: appDependencies.appBloc,
+        bloc: appDependencies.appSettingsBloc,
         builder: (context, state) => AppSettingsScope(
           appSettingsModel: state.appSettingsModel,
           child: AppContext(

@@ -70,4 +70,16 @@ class CognitoService$Impl implements CognitoService {
       rethrow;
     }
   }
+
+  @override
+  Future<String?> getAccessToken() async {
+    try {
+      if (userSession == null || !userSession!.isValid()) {
+        await refreshSession();
+      }
+      return userSession?.getAccessToken().getJwtToken();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

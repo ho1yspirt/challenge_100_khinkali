@@ -9,7 +9,7 @@ abstract interface class AuthRepository {
     required String password,
   });
 
-  Future<CognitoUserSession?> restore();
+  Future<CognitoUserSession?> restoreSession();
 }
 
 class AuthRepository$Impl implements AuthRepository {
@@ -47,7 +47,7 @@ class AuthRepository$Impl implements AuthRepository {
   }
 
   @override
-  Future<CognitoUserSession?> restore() async {
+  Future<CognitoUserSession?> restoreSession() async {
     try {
       final String username = await _authDataSource.getUsername();
       final String idToken = await _authDataSource.getIdToken();
@@ -60,6 +60,16 @@ class AuthRepository$Impl implements AuthRepository {
         accessToken: accessToken,
         refreshToken: refreshToken,
       );
+
+      return _cognitoService.userSession;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<CognitoUserSession?> refreshSession() async {
+    try {
+      await _cognitoService.refreshSession();
 
       return _cognitoService.userSession;
     } catch (e) {

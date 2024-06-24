@@ -27,4 +27,6 @@ abstract interface class CognitoService {
   });
 
   Future<void> refreshSession();
+
+  Future<String?> getAccessToken();
 }

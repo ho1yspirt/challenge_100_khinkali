@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/services/appsync/appsync_service.dart';
 import '../../features/auth/services/cognito/cognito_service.dart';
 import '../widget/app_dependencies_scope.dart';
 import '../../core/components/router/app_router.dart';
@@ -32,6 +33,7 @@ class AppDependencies {
 
   // services
   late final CognitoService cognitoService;
+  late final AppSyncService appAyncService;
 
   // datasources
   late final AppSettingsDataSource appSettingsDataSource;
@@ -42,7 +44,7 @@ class AppDependencies {
   late final AuthRepository authRepository;
 
   // blocs
-  late final AppSettingsBloc appBloc;
+  late final AppSettingsBloc appSettingsBloc;
   late final AuthBloc authBloc;
 
   Future<void> initialize(String env) async {
@@ -66,6 +68,12 @@ class AppDependencies {
         userPoolId: appConfig.cognitoUserPoolId,
         clientId: appConfig.cognitoClientId,
       );
+    appAyncService = AppSyncService$Impl(
+      cognitoService,
+    )..initialize(
+        httpLinkUrl: appConfig.appSyncBaseUrlEndpoint,
+        apiKey: appConfig.appSyncApiKey,
+      );
 
     // datasources
     appSettingsDataSource = AppSettingsDataSource$Impl(sharedPreferences);
@@ -76,7 +84,7 @@ class AppDependencies {
     authRepository = AuthRepository$Impl(cognitoService, authDataSource);
 
     // blocs
-    appBloc = AppSettingsBloc(settingsRepository);
+    appSettingsBloc = AppSettingsBloc(settingsRepository);
     // create instance of auth blco once
     // and after creation immediately check current authentication status
     authBloc = AuthBloc(authRepository)..add(const AuthStatusChecked());
