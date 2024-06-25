@@ -9,7 +9,11 @@ abstract interface class AuthRepository {
     required String password,
   });
 
+  Future<void> logout();
+
   Future<CognitoUserSession?> restoreSession();
+
+  Future<CognitoUserSession?> refreshSession();
 }
 
 class AuthRepository$Impl implements AuthRepository {
@@ -47,26 +51,46 @@ class AuthRepository$Impl implements AuthRepository {
   }
 
   @override
-  Future<CognitoUserSession?> restoreSession() async {
+  Future<void> logout() async {
     try {
-      final String username = await _authDataSource.getUsername();
-      final String idToken = await _authDataSource.getIdToken();
-      final String accessToken = await _authDataSource.getAccessToken();
-      final String refreshToken = await _authDataSource.getRefreshToken();
+      await _cognitoService.user?.signOut();
 
-      _cognitoService.initializeUserSession(
-        username: username,
-        idToken: idToken,
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-      );
-
-      return _cognitoService.userSession;
+      await _authDataSource.deleteUsername();
+      await _authDataSource.deleteIdToken();
+      await _authDataSource.deleteAccessToken();
+      await _authDataSource.deleteRefreshToken();
     } catch (e) {
       rethrow;
     }
   }
 
+  @override
+  Future<CognitoUserSession?> restoreSession() async {
+    try {
+      final String? username = await _authDataSource.getUsername();
+      final String? idToken = await _authDataSource.getIdToken();
+      final String? accessToken = await _authDataSource.getAccessToken();
+      final String? refreshToken = await _authDataSource.getRefreshToken();
+
+      // TODO: Prettify condition check
+      if (username != null && idToken != null && accessToken != null && refreshToken != null) {
+        await _cognitoService.initializeUserSession(
+          username: username,
+          idToken: idToken,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        );
+
+        return _cognitoService.userSession;
+      }
+
+      return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
   Future<CognitoUserSession?> refreshSession() async {
     try {
       await _cognitoService.refreshSession();

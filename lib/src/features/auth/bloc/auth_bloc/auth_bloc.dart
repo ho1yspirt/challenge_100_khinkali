@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -12,60 +14,85 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
 
   AuthBloc(this._authRepository) : super(const Unautheticated()) {
-    on<AuthStatusChecked>((event, emit) async {
-      try {
-        // Get possible restored cognito session from previous application session
-        final CognitoUserSession? session = await _authRepository.restoreSession();
+    on<AuthEvent>(
+      (event, emit) => switch (event) {
+        AuthLoggedIn() => _authLoggedIn(event, emit),
+        AuthLoggedOut() => _authLoggedOut(event, emit),
+        AuthStatusChecked() => _authStatusChecked(event, emit),
+      },
+    );
+  }
 
-        // Logout user if restored cognito session is forgotten
-        if (session == null) {
-          emit(const Unautheticated());
-          return;
-        }
+  FutureOr<void> _authLoggedIn(event, emit) async {
+    try {
+      emit(const AuthProcessing());
 
-        // Restore user session from cognito session in application session
-        if (session.isValid()) {
-          emit(const Authenticated());
-          return;
-        }
+      await _authRepository.login(
+        email: event.email,
+        password: event.password,
+      );
 
-        // If cognito session is invalid try to refresh it
-        final CognitoUserSession? refreshedSession = await _authRepository.restoreSession();
+      emit(const Authenticated());
+    } catch (error, stackTrace) {
+      logger.e('AuthBloc', error: error, stackTrace: stackTrace);
 
-        if (refreshedSession?.isValid() ?? false) {
-          emit(const Authenticated());
-        } else {
-          // Logout user if failed to refresh cognito session
-          emit(const Unautheticated());
-        }
-      } catch (error, stackTrace) {
-        logger.e('AuthBloc', error: error, stackTrace: stackTrace);
+      emit(Unautheticated(
+        hasError: true,
+        error: error,
+      ));
+    }
+  }
 
-        emit(Unautheticated(
-          hasError: true,
-          error: error,
-        ));
+  FutureOr<void> _authLoggedOut(event, emit) async {
+    try {
+      emit(const AuthProcessing());
+
+      await _authRepository.logout();
+
+      emit(const Unautheticated());
+    } catch (error, stackTrace) {
+      logger.e('AuthBloc', error: error, stackTrace: stackTrace);
+
+      emit(Unautheticated(
+        hasError: true,
+        error: error,
+      ));
+    }
+  }
+
+  FutureOr<void> _authStatusChecked(event, emit) async {
+    try {
+      // Get possible restored cognito session from previous application session
+      final CognitoUserSession? session = await _authRepository.restoreSession();
+
+      // Logout user if restored cognito session is forgotten
+      if (session == null) {
+        emit(const Unautheticated());
+        return;
       }
-    });
 
-    on<AuthLoggedIn>((event, emit) async {
-      try {
-        emit(const AuthProcessing());
-
-        await _authRepository.login(
-          email: event.email,
-          password: event.password,
-        );
-
+      // Restore user session from cognito session in application session
+      if (session.isValid()) {
         emit(const Authenticated());
-      } catch (error, stackTrace) {
-        logger.e('AuthBloc', error: error, stackTrace: stackTrace);
-
-        emit(Unautheticated(
-          hasError: true,
-          error: error,
-        ));
+        return;
       }
-    });
+
+      // If cognito session is invalid try to refresh it
+      final CognitoUserSession? refreshedSession = await _authRepository.refreshSession();
+
+      if (refreshedSession?.isValid() ?? false) {
+        emit(const Authenticated());
+      } else {
+        // Logout user if failed to refresh cognito session
+        emit(const Unautheticated());
+      }
+    } catch (error, stackTrace) {
+      logger.e('AuthBloc', error: error, stackTrace: stackTrace);
+
+      emit(Unautheticated(
+        hasError: true,
+        error: error,
+      ));
+    }
   }
 }

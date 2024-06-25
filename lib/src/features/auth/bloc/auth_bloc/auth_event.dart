@@ -23,6 +23,13 @@ final class AuthLoggedIn extends AuthEvent {
       ];
 }
 
+final class AuthLoggedOut extends AuthEvent {
+  const AuthLoggedOut();
+
+  @override
+  List<Object> get props => [];
+}
+
 final class AuthStatusChecked extends AuthEvent {
   const AuthStatusChecked();
 

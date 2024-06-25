@@ -61,6 +61,7 @@ class _LoginFormState extends State<LoginForm> {
           children: [
             TextFormField(
               controller: _emailController,
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               decoration: const InputDecoration(
                 prefixIcon: Icon(CupertinoIcons.at),
               ),
@@ -74,6 +75,7 @@ class _LoginFormState extends State<LoginForm> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _passwordController,
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               decoration: const InputDecoration(
                 prefixIcon: Icon(CupertinoIcons.asterisk_circle),
               ),

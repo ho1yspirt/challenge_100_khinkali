@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+
 import '../../constants/constants.dart';
 
 final class AppTheme {
   final ThemeData _baseThemeData = ThemeData(
     fontFamily: AppFonts.inter,
-    splashFactory: InkRipple.splashFactory,
+    splashFactory: InkSparkle.splashFactory,
     pageTransitionsTheme: const PageTransitionsTheme(builders: {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
     }),
@@ -44,22 +45,24 @@ final class AppTheme {
   );
 
   late final ThemeData lightThemeData = _baseThemeData.copyWith(
+    brightness: Brightness.light,
     primaryColor: AppColors.primary,
     scaffoldBackgroundColor: Colors.white,
-    colorScheme: const ColorScheme.light(
+    colorScheme: ColorScheme.fromSeed(
       surfaceTint: Colors.transparent,
       brightness: Brightness.light,
-      primary: AppColors.primary,
+      seedColor: AppColors.primary,
     ),
   );
 
   late final ThemeData darkThemeData = _baseThemeData.copyWith(
+    brightness: Brightness.dark,
     primaryColor: AppColors.primary,
     scaffoldBackgroundColor: Colors.black,
-    colorScheme: const ColorScheme.dark(
+    colorScheme: ColorScheme.fromSeed(
       surfaceTint: Colors.transparent,
       brightness: Brightness.dark,
-      primary: AppColors.primary,
+      seedColor: AppColors.primary,
     ),
   );
 }

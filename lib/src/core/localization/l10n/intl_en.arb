@@ -1,5 +1,6 @@
 {
     "appName": "Finik Map",
     "actionLogin": "Log in",
-    "actionSignup": "Sign up"
+    "actionSignup": "Sign up",
+    "actionLogout": "Log out"
 }

@@ -6,10 +6,15 @@ abstract interface class AuthDataSource {
   Future<void> setAccessToken(String value);
   Future<void> setRefreshToken(String value);
 
-  Future<String> getUsername();
-  Future<String> getIdToken();
-  Future<String> getAccessToken();
-  Future<String> getRefreshToken();
+  Future<String?> getUsername();
+  Future<String?> getIdToken();
+  Future<String?> getAccessToken();
+  Future<String?> getRefreshToken();
+
+  Future<void> deleteUsername();
+  Future<void> deleteIdToken();
+  Future<void> deleteAccessToken();
+  Future<void> deleteRefreshToken();
 }
 
 class AuthDataSource$Impl implements AuthDataSource {
@@ -61,38 +66,58 @@ class AuthDataSource$Impl implements AuthDataSource {
   }
 
   @override
-  Future<String> getUsername() async {
+  Future<String?> getUsername() async {
     try {
-      return (await _flutterSecureStorage.read(key: usernameKey))!;
+      return await _flutterSecureStorage.read(key: usernameKey);
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<String> getIdToken() async {
+  Future<String?> getIdToken() async {
     try {
-      return (await _flutterSecureStorage.read(key: cognitoIdTokenKey))!;
+      return await _flutterSecureStorage.read(key: cognitoIdTokenKey);
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<String> getAccessToken() async {
+  Future<String?> getAccessToken() async {
     try {
-      return (await _flutterSecureStorage.read(key: cognitoAccessTokenKey))!;
+      return await _flutterSecureStorage.read(key: cognitoAccessTokenKey);
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<String> getRefreshToken() async {
+  Future<String?> getRefreshToken() async {
     try {
-      return (await _flutterSecureStorage.read(key: cognitoRefreshTokenKey))!;
+      return await _flutterSecureStorage.read(key: cognitoRefreshTokenKey);
     } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<void> deleteUsername() async {
+    _flutterSecureStorage.delete(key: usernameKey);
+  }
+
+  @override
+  Future<void> deleteIdToken() async {
+    _flutterSecureStorage.delete(key: cognitoIdTokenKey);
+  }
+
+  @override
+  Future<void> deleteAccessToken() async {
+    _flutterSecureStorage.delete(key: cognitoAccessTokenKey);
+  }
+
+  @override
+  Future<void> deleteRefreshToken() async {
+    _flutterSecureStorage.delete(key: cognitoRefreshTokenKey);
   }
 }
