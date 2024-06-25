@@ -30,13 +30,11 @@ final class AppRouter {
           name: AppRoutes.main,
           path: AppRoutes.main,
           builder: (context, state) => const MainScreen(),
-          routes: [
-            GoRoute(
-              name: AppRoutes.home,
-              path: AppRoutes.home,
-              builder: (context, state) => const HomeScreen(),
-            ),
-          ],
+        ),
+        GoRoute(
+          name: AppRoutes.home,
+          path: AppRoutes.home,
+          builder: (context, state) => const HomeScreen(),
         ),
         GoRoute(
           name: AppRoutes.auth,
@@ -63,7 +61,7 @@ final class AppRoutes {
   const AppRoutes._();
 
   static const main = '/';
-  static const home = 'home';
+  static const home = '/home';
   static const auth = '/auth';
   static const login = 'login';
 }

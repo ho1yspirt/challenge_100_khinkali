@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:learn_flutter_aws/src/features/user/bloc/list_users/list_users_bloc.dart';
+import 'package:learn_flutter_aws/src/features/user/bloc/user/user_bloc.dart';
+import 'package:learn_flutter_aws/src/features/user/data/datasources/user_datasource.dart';
+import 'package:learn_flutter_aws/src/features/user/data/repositories/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/services/appsync/appsync_service.dart';
@@ -39,13 +43,20 @@ class AppDependencies {
   late final AppSettingsDataSource appSettingsDataSource;
   late final AuthDataSource authDataSource;
 
+  late final UserDatasource userDatasource;
+
   // repositories
   late final AppSettingsRepository settingsRepository;
   late final AuthRepository authRepository;
 
+  late final UserRepository userRepository;
+
   // blocs
   late final AppSettingsBloc appSettingsBloc;
   late final AuthBloc authBloc;
+
+  late final UserBloc userBloc;
+  late final ListUsersBloc listUsersBloc;
 
   Future<void> initialize(String env) async {
     // config
@@ -79,15 +90,22 @@ class AppDependencies {
     appSettingsDataSource = AppSettingsDataSource$Impl(sharedPreferences);
     authDataSource = AuthDataSource$Impl(flutterSecureStorage);
 
+    userDatasource = UserDatasource$Impl(appAyncService);
+
     // repositories
     settingsRepository = AppSettingsRepository$Impl(appSettingsDataSource);
     authRepository = AuthRepository$Impl(cognitoService, authDataSource);
+
+    userRepository = UserRepository$Impl(userDatasource);
 
     // blocs
     appSettingsBloc = AppSettingsBloc(settingsRepository);
     // create instance of auth blco once
     // and after creation immediately check current authentication status
     authBloc = AuthBloc(authRepository)..add(const AuthStatusChecked());
+
+    userBloc = UserBloc(userRepository);
+    listUsersBloc = ListUsersBloc(userRepository);
 
     // components
     appRouter = AppRouter(authBloc);

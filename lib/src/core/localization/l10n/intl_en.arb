@@ -2,5 +2,12 @@
     "appName": "Finik Map",
     "actionLogin": "Log in",
     "actionSignup": "Sign up",
-    "actionLogout": "Log out"
+    "actionLogout": "Log out",
+    "homeTitle": "Home",
+    "actionHome": "Home",
+    "leaderboardTitle": "Leaderboard",
+    "devicesTitle": "Devices",
+    "actionLeaderboard": "Leaderboard",
+    "actionDevices": "Devices",
+    "pointsCounter": "Points: {counter}"
 }
