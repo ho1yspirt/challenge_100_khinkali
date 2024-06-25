@@ -25,8 +25,13 @@ abstract interface class AppRunner {
   void run();
 }
 
+/// {@template app_runner}
+///
 /// Implementation of [AppRunner]
+///
+/// {@endtemplate}
 class AppRunner$Impl implements AppRunner {
+  /// {@macro app_runner}
   const AppRunner$Impl({
     required this.env,
   });
