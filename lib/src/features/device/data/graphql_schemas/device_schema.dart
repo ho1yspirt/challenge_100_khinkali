@@ -52,6 +52,8 @@ const String createDeviceMutation = """
             status
             user {
               id
+              username
+              point
             }
           }
         }

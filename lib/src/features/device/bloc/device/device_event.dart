@@ -17,3 +17,16 @@ final class DeviceFetched extends DeviceEvent {
   @override
   List<Object> get props => [id];
 }
+
+final class DeviceCreated extends DeviceEvent {
+  const DeviceCreated({
+    required this.deviceModel,
+    required this.userLocation,
+  });
+
+  final DeviceModel deviceModel;
+  final LocationModel userLocation;
+
+  @override
+  List<Object> get props => [deviceModel];
+}

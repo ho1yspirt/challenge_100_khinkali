@@ -1,12 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'package:learn_flutter_aws/src/app/data/app_dependencies.dart';
 import 'package:learn_flutter_aws/src/core/widgets/persistent_header.dart';
+import 'package:learn_flutter_aws/src/features/device/bloc/device/device_bloc.dart';
 import 'package:learn_flutter_aws/src/features/device/bloc/list_devices/list_devices_bloc.dart';
+import 'package:learn_flutter_aws/src/features/device/data/models/device_model.dart';
 import 'package:learn_flutter_aws/src/features/user/bloc/list_users/list_users_bloc.dart';
 import 'package:learn_flutter_aws/src/features/user/bloc/user/user_bloc.dart';
+import 'package:learn_flutter_aws/src/features/user/data/models/user_model.dart';
 
 import '../../../../core/localization/generated/l10n.dart';
 import '../widgets/points_card.dart';
@@ -95,6 +100,26 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           ]),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          HapticFeedback.heavyImpact();
+
+          AppDependencies.of(context).deviceBloc.add(DeviceCreated(
+                deviceModel: DeviceModel(
+                  address: 'Fatiyanova 170',
+                  approvalsCount: 2,
+                  id: '',
+                  location: LocationModel(lat: 45, lon: 45),
+                  notes: 'some notes',
+                  registrationDate: DateTime.now().millisecondsSinceEpoch,
+                  status: '',
+                  user: UserModel(id: '', username: '', points: 0),
+                ),
+                userLocation: LocationModel(lat: 45, lon: 45),
+              ));
+        },
+        child: const Icon(CupertinoIcons.add_circled_solid),
       ),
     );
   }

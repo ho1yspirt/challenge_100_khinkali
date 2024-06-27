@@ -16,6 +16,7 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
     on<DeviceEvent>(
       (event, emit) => switch (event) {
         DeviceFetched() => _getDevice(event, emit),
+        DeviceCreated() => _createDevice(event, emit),
       },
     );
   }
@@ -27,6 +28,23 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
       final DeviceModel deviceModel = await _deviceRepository.getDevice(id: event.id);
 
       emit(DeviceFetchSuccess(deviceModel: deviceModel));
+    } catch (error, stackTrace) {
+      logger.e('AuthBloc', error: error, stackTrace: stackTrace);
+
+      emit(DeviceFuiluer());
+    }
+  }
+
+  FutureOr<void> _createDevice(event, emit) async {
+    try {
+      emit(DeviceLoading());
+
+      final DeviceModel createdDeviceModel = await _deviceRepository.createDevice(
+        deviceModel: event.deviceModel,
+        userLocation: event.userLocation,
+      );
+
+      emit(DeviceFetchSuccess(deviceModel: createdDeviceModel));
     } catch (error, stackTrace) {
       logger.e('AuthBloc', error: error, stackTrace: stackTrace);
 

@@ -8,6 +8,11 @@ abstract interface class DeviceRepository {
   });
 
   Future<List<DeviceModel>> listDevices();
+
+  Future<DeviceModel> createDevice({
+    required DeviceModel deviceModel,
+    required LocationModel userLocation,
+  });
 }
 
 class DeviceRepository$Impl implements DeviceRepository {
@@ -34,11 +39,36 @@ class DeviceRepository$Impl implements DeviceRepository {
       final Map<String, dynamic> result = await _deviceDatasource.listDevices();
 
       final List<DeviceModel> deviceModelList = List.generate(
-        result['users'].length,
-        (index) => DeviceModel.fromMap(result['users'][index]),
+        result['devices'].length,
+        (index) => DeviceModel.fromMap(result['devices'][index]),
       );
 
       return deviceModelList;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<DeviceModel> createDevice({
+    required DeviceModel deviceModel,
+    required LocationModel userLocation,
+  }) async {
+    try {
+      final Map<String, dynamic> result = await _deviceDatasource.createDevice(
+        address: deviceModel.address,
+        lat: deviceModel.location!.lat,
+        lon: deviceModel.location!.lon,
+        notes: deviceModel.notes,
+        // TODO; implement organization to [DeviceModel]
+        organization: '',
+        userLocationLat: userLocation.lat,
+        userLocationLon: userLocation.lon,
+      );
+
+      logger.d(result);
+
+      return DeviceModel.fromMap(result);
     } catch (e) {
       rethrow;
     }

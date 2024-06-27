@@ -1,9 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:learn_flutter_aws/src/features/user/data/models/user_model.dart';
 
-final class DeviceModel {
+class DeviceModel {
   DeviceModel({
     required this.address,
     required this.approvalsCount,
@@ -15,14 +14,14 @@ final class DeviceModel {
     required this.user,
   });
 
-  final String address;
-  final int approvalsCount;
+  final String? address;
+  final int? approvalsCount;
   final String id;
-  final LocationModel location;
-  final String notes;
-  final int registrationDate;
-  final String status;
-  final UserModel user;
+  final LocationModel? location;
+  final String? notes;
+  final int? registrationDate;
+  final String? status;
+  final UserModel? user;
 
   DeviceModel copyWith({
     String? address,
@@ -51,24 +50,24 @@ final class DeviceModel {
       'address': address,
       'approvalsCount': approvalsCount,
       'id': id,
-      'location': location.toMap(),
+      'location': location?.toMap(),
       'notes': notes,
       'registrationDate': registrationDate,
       'status': status,
-      'user': user.toMap(),
+      'user': user?.toMap(),
     };
   }
 
   factory DeviceModel.fromMap(Map<String, dynamic> map) {
     return DeviceModel(
-      address: map['address'] as String,
-      approvalsCount: map['approvalsCount'] as int,
+      address: map['address'] != null ? map['address'] as String : null,
+      approvalsCount: map['approvalsCount'] != null ? map['approvalsCount'] as int : null,
       id: map['id'] as String,
-      location: LocationModel.fromMap(map['location'] as Map<String, dynamic>),
-      notes: map['notes'] as String,
-      registrationDate: map['registrationDate'] as int,
-      status: map['status'] as String,
-      user: UserModel.fromMap(map['user'] as Map<String, dynamic>),
+      location: map['location'] != null ? LocationModel.fromMap(map['location'] as Map<String, dynamic>) : null,
+      notes: map['notes'] != null ? map['notes'] as String : null,
+      registrationDate: map['registrationDate'] != null ? map['registrationDate'] as int : null,
+      status: map['status'] != null ? map['status'] as String : null,
+      user: map['user'] != null ? UserModel.fromMap(map['user'] as Map<String, dynamic>) : null,
     );
   }
 
@@ -108,7 +107,7 @@ final class DeviceModel {
   }
 }
 
-final class LocationModel {
+class LocationModel {
   LocationModel({
     required this.lat,
     required this.lon,
