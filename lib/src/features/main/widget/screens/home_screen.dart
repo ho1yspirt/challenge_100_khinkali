@@ -4,6 +4,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'package:learn_flutter_aws/src/app/data/app_dependencies.dart';
 import 'package:learn_flutter_aws/src/core/widgets/persistent_header.dart';
+import 'package:learn_flutter_aws/src/features/device/bloc/list_devices/list_devices_bloc.dart';
 import 'package:learn_flutter_aws/src/features/user/bloc/list_users/list_users_bloc.dart';
 import 'package:learn_flutter_aws/src/features/user/bloc/user/user_bloc.dart';
 
@@ -23,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     AppDependencies.of(context).listUsersBloc.add(const ListUsersFetched());
+    AppDependencies.of(context).listDevicesBloc.add(const ListDevicesFetched());
   }
 
   @override
@@ -76,7 +78,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 return const SizedBox();
               },
             ),
-            const ColoredBox(color: Colors.red),
+            BlocBuilder<ListDevicesBloc, ListDevicesState>(
+              bloc: AppDependencies.of(context).listDevicesBloc,
+              builder: (context, state) {
+                if (state is ListDevicesFetchSuccess) {
+                  return ListView.builder(
+                    itemCount: state.deviceModelList.length,
+                    itemBuilder: (context, index) => ListTile(
+                      title: Text(state.deviceModelList[index].address.toString()),
+                      trailing: Text(state.deviceModelList[index].approvalsCount.toString()),
+                    ),
+                  );
+                }
+                return const SizedBox();
+              },
+            )
           ]),
         ),
       ),

@@ -4,8 +4,7 @@ import 'package:equatable/equatable.dart';
 
 import 'package:learn_flutter_aws/src/core/utils/logger.dart';
 import 'package:learn_flutter_aws/src/features/device/data/models/device_model.dart';
-import 'package:learn_flutter_aws/src/features/user/data/models/user_model.dart';
-import 'package:learn_flutter_aws/src/features/user/data/repositories/device_repository.dart';
+import 'package:learn_flutter_aws/src/features/device/data/repositories/device_repository.dart';
 
 part 'list_devices_event.dart';
 part 'list_devices_state.dart';

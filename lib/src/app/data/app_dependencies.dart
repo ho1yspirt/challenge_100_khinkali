@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:learn_flutter_aws/src/features/device/bloc/device/device_bloc.dart';
+import 'package:learn_flutter_aws/src/features/device/bloc/list_devices/list_devices_bloc.dart';
+import 'package:learn_flutter_aws/src/features/device/data/datasources/device_datasource.dart';
+import 'package:learn_flutter_aws/src/features/device/data/repositories/device_repository.dart';
 import 'package:learn_flutter_aws/src/features/user/bloc/list_users/list_users_bloc.dart';
 import 'package:learn_flutter_aws/src/features/user/bloc/user/user_bloc.dart';
 import 'package:learn_flutter_aws/src/features/user/data/datasources/user_datasource.dart';
@@ -37,19 +41,21 @@ class AppDependencies {
 
   // services
   late final CognitoService cognitoService;
-  late final AppSyncService appAyncService;
+  late final AppSyncService appSyncService;
 
   // datasources
   late final AppSettingsDataSource appSettingsDataSource;
   late final AuthDataSource authDataSource;
 
   late final UserDatasource userDatasource;
+  late final DeviceDatasource deviceDatasource;
 
   // repositories
   late final AppSettingsRepository settingsRepository;
   late final AuthRepository authRepository;
 
   late final UserRepository userRepository;
+  late final DeviceRepository deviceRepository;
 
   // blocs
   late final AppSettingsBloc appSettingsBloc;
@@ -57,6 +63,8 @@ class AppDependencies {
 
   late final UserBloc userBloc;
   late final ListUsersBloc listUsersBloc;
+  late final DeviceBloc deviceBloc;
+  late final ListDevicesBloc listDevicesBloc;
 
   Future<void> initialize(String env) async {
     // config
@@ -79,7 +87,7 @@ class AppDependencies {
         userPoolId: appConfig.cognitoUserPoolId,
         clientId: appConfig.cognitoClientId,
       );
-    appAyncService = AppSyncService$Impl(
+    appSyncService = AppSyncService$Impl(
       cognitoService,
     )..initialize(
         httpLinkUrl: appConfig.appSyncBaseUrlEndpoint,
@@ -90,13 +98,15 @@ class AppDependencies {
     appSettingsDataSource = AppSettingsDataSource$Impl(sharedPreferences);
     authDataSource = AuthDataSource$Impl(flutterSecureStorage);
 
-    userDatasource = UserDatasource$Impl(appAyncService);
+    userDatasource = UserDatasource$Impl(appSyncService);
+    deviceDatasource = DeviceDatasource$Impl(appSyncService);
 
     // repositories
     settingsRepository = AppSettingsRepository$Impl(appSettingsDataSource);
     authRepository = AuthRepository$Impl(cognitoService, authDataSource);
 
     userRepository = UserRepository$Impl(userDatasource);
+    deviceRepository = DeviceRepository$Impl(deviceDatasource);
 
     // blocs
     appSettingsBloc = AppSettingsBloc(settingsRepository);
@@ -106,6 +116,8 @@ class AppDependencies {
 
     userBloc = UserBloc(userRepository);
     listUsersBloc = ListUsersBloc(userRepository);
+    deviceBloc = DeviceBloc(deviceRepository);
+    listDevicesBloc = ListDevicesBloc(deviceRepository);
 
     // components
     appRouter = AppRouter(authBloc);

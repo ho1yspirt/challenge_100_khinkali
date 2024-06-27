@@ -16,7 +16,7 @@ final class ListDevicesFetchSuccess extends ListDevicesState {
     required this.deviceModelList,
   });
 
-  final List<UserModel> deviceModelList;
+  final List<DeviceModel> deviceModelList;
 
   @override
   List<Object> get props => [deviceModelList];

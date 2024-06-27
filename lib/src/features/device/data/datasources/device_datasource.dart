@@ -3,21 +3,21 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:learn_flutter_aws/src/core/services/appsync/appsync_service.dart';
 import 'package:learn_flutter_aws/src/features/user/data/graphql_schemas/user_schema.dart';
 
-abstract interface class UserDatasource {
-  Future<Map<String, dynamic>> getUser({
+abstract interface class DeviceDatasource {
+  Future<Map<String, dynamic>> getDevice({
     required String id,
   });
 
-  Future<Map<String, dynamic>> listUsers();
+  Future<Map<String, dynamic>> listDevices();
 }
 
-class UserDatasource$Impl implements UserDatasource {
-  const UserDatasource$Impl(this._appSyncService);
+class DeviceDatasource$Impl implements DeviceDatasource {
+  const DeviceDatasource$Impl(this._appSyncService);
 
   final AppSyncService _appSyncService;
 
   @override
-  Future<Map<String, dynamic>> getUser({required String id}) async {
+  Future<Map<String, dynamic>> getDevice({required String id}) async {
     try {
       final QueryResult result = await _appSyncService.query(
         QueryOptions(
@@ -48,7 +48,7 @@ class UserDatasource$Impl implements UserDatasource {
   }
 
   @override
-  Future<Map<String, dynamic>> listUsers() async {
+  Future<Map<String, dynamic>> listDevices() async {
     try {
       final QueryResult result = await _appSyncService.query(
         QueryOptions(
