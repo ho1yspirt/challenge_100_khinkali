@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
-import 'package:learn_flutter_aws/src/core/components/router/app_router.dart';
 
 import '../../../../app/data/app_dependencies.dart';
 import '../../../../core/localization/generated/l10n.dart';
@@ -39,8 +37,6 @@ class MainScreen extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: () {
                   HapticFeedback.heavyImpact();
-
-                  context.push(AppRoutes.home);
                 },
                 icon: const Icon(CupertinoIcons.house_fill),
                 label: Text(S.of(context).actionHome),

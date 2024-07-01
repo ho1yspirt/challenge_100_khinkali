@@ -1,5 +1,6 @@
-name: learn_flutter_aws
-description: "A new Flutter project for learning flutter and learning how to connect it to the AWS backend apis"
+name: challenge_100_khinkali
+
+description: "A fun Flutter project for trip to Georgia with my friends"
 
 publish_to: "none"
 
@@ -25,11 +26,8 @@ dependencies:
   jwt_decoder: 2.0.1
 
   # persistent & data
-  graphql_flutter: 5.1.2
-
   shared_preferences: 2.2.3
   flutter_secure_storage: 9.2.2
-  drift: 2.18.0
 
   # test
   bloc_test: 9.1.7
@@ -52,8 +50,6 @@ dependencies:
   # integrations
   sentry: 8.2.0
   sentry_flutter: 8.2.0
-  amplitude_flutter: 3.16.2
-  amazon_cognito_identity_dart_2: 3.6.5
 
   # others
 

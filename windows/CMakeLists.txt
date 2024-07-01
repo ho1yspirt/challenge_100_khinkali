@@ -1,10 +1,10 @@
 # Project-level configuration.
 cmake_minimum_required(VERSION 3.14)
-project(learn_flutter_aws LANGUAGES CXX)
+project(challenge_100_khinkali LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "learn_flutter_aws")
+set(BINARY_NAME "challenge_100_khinkali")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.

@@ -1,4 +1,4 @@
-package com.example.learn_flutter_aws
+package com.skirrum.challenge_100_khinkali
 
 import io.flutter.embedding.android.FlutterActivity
 

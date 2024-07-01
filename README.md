@@ -1,6 +1,6 @@
-# learn_flutter_aws
+# challenge_100_khinkali
 
-An example Flutter project that showcase connection of Flutter application to AWS backend API.
+A fun Flutter project for trip to Georgia with my friends.
 
 ## Getting Started
 

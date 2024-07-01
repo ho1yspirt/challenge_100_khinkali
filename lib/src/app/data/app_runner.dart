@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../../main.dart';
 import '../../core/utils/logger.dart';
@@ -78,10 +77,6 @@ class AppRunner$Impl implements AppRunner {
 
     // Load .env file
     await dotenv.load(fileName: ".env");
-
-    // Initialize Hive NoSQL DB for storing GraphQL client's cache
-    // Hive itself destructive library, but for client's purpouses it maybe tolerable
-    await initHiveForFlutter();
 
     // Initialize application global dependencies
     final AppDependencies appDependencies = AppDependencies();
